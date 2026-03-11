@@ -7,23 +7,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     private Node<T> first;
     private Node<T> last;
 
-    Node<T> node(int index) {
-
-        if (index < (size >> 1)) {
-            Node<T> x = first;
-            for (int i = 0; i < index; i++) {
-                x = x.next;
-            }
-            return x;
-        } else {
-            Node<T> x = last;
-            for (int i = size - 1; i > index; i--) {
-                x = x.prev;
-            }
-            return x;
-        }
-    }
-
     @Override
     public void add(T value) {
         linkLast(value);
@@ -42,8 +25,8 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T e : list) {
-            add(e);
+        for (T element : list) {
+            add(element);
         }
     }
 
@@ -74,16 +57,16 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
     @Override
     public boolean remove(T object) {
         if (object == null) {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (x.item == null) {
-                    unlink(x);
+            for (Node<T> currentNode = first; currentNode != null; currentNode = currentNode.next) {
+                if (currentNode.item == null) {
+                    unlink(currentNode);
                     return true;
                 }
             }
         } else {
-            for (Node<T> x = first; x != null; x = x.next) {
-                if (object.equals(x.item)) {
-                    unlink(x);
+            for (Node<T> cerrentNode = first; cerrentNode != null; cerrentNode = cerrentNode.next) {
+                if (object.equals(cerrentNode.item)) {
+                    unlink(cerrentNode);
                     return true;
                 }
             }
@@ -101,33 +84,49 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         return size == 0;
     }
 
-    private void linkFirst(T e) {
-        final Node<T> f = first;
-        final Node<T> newNode = new Node<>(null, e, f);
+    private Node<T> node(int index) {
+        if (index < (size >> 1)) {
+            Node<T> currentNode = first;
+            for (int i = 0; i < index; i++) {
+                currentNode = currentNode.next;
+            }
+            return currentNode;
+        } else {
+            Node<T> currentNode = last;
+            for (int i = size - 1; i > index; i--) {
+                currentNode = currentNode.prev;
+            }
+            return currentNode;
+        }
+    }
+
+    private void linkFirst(T element) {
+        final Node<T> firstNode = first;
+        final Node<T> newNode = new Node<>(null, element, firstNode);
         first = newNode;
-        if (f == null) {
+        if (firstNode == null) {
             last = newNode;
         } else {
-            f.prev = newNode;
+            firstNode.prev = newNode;
         }
         size++;
     }
 
-    private void linkLast(T e) {
-        final Node<T> l = last;
-        final Node<T> newNode = new Node<>(l, e, null);
+    private void linkLast(T element) {
+        final Node<T> lastNode = last;
+        final Node<T> newNode = new Node<>(lastNode, element, null);
         last = newNode;
-        if (l == null) {
+        if (lastNode == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastNode.next = newNode;
         }
         size++;
     }
 
-    private void linkBefore(T e, Node<T> succ) {
+    private void linkBefore(T element, Node<T> succ) {
         Node<T> pred = succ.prev;
-        Node<T> newNode = new Node<>(pred, e, succ);
+        Node<T> newNode = new Node<>(pred, element, succ);
         succ.prev = newNode;
         if (pred == null) {
             first = newNode;
@@ -141,7 +140,6 @@ public class MyLinkedList<T> implements MyLinkedListInterface<T> {
         if (node == null) {
             throw new IllegalArgumentException("node is null");
         }
-        final T element = node.item;
         final Node<T> prev = node.prev;
         final Node<T> next = node.next;
 
